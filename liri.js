@@ -44,7 +44,7 @@ if (command == commands[0]) {
 function myTweets() {
     console.log("Retrieving the last 20 tweets.");
 
-    twitterClientls.get('statuses/user_timeline', params, function(error, tweets, response) {
+    twitterClient.get('statuses/user_timeline', params, function(error, tweets, response) {
         if (!error) {
             console.log(tweets);
         }
