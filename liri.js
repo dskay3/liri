@@ -57,18 +57,26 @@ function instructions() {
 instructions();
 
 if (command == commands[0]) {
+    console.log("You have selected " + chalk.bgBlue("my-tweets") + ".");
+    console.log(dashes);
     myTweets();
 }
 
 if (command == commands[1]) {
+    console.log("You have selected " + chalk.bgGreen("spotify-this-song") + ".");
+    console.log(dashes);
     spotifyCall();
 }
 
 if (command == commands[2]) {
+    console.log("You have selected " + chalk.bgRed("movie-this") + ".");
+    console.log(dashes);
     movieCall();
 }
 
 if (command == commands[3]) {
+    console.log("You have selected " + chalk.bgMagenta("do-what-it-says") + ".");
+    console.log(dashes);
     doWhatItSays();
 }
 
@@ -96,6 +104,7 @@ function myTweets() {
             setTimeout(function() {
                 console.log(chalk.bgRed("Tweets data retrieval has been completed."));
                 console.log(chalk.bold(count + " tweets were retrieved."));
+                console.log(dashes);
             }, 3000);
         };
     });
@@ -103,6 +112,8 @@ function myTweets() {
 
 // Shows information for spotify
 function spotifyCall() {
+    var count = 0;
+
     if (inputs == "" && nodeArgs[2] == commands[1]) {
         spotifyClient.search({
             type: 'track',
@@ -114,10 +125,18 @@ function spotifyCall() {
                     return console.log('Error occurred: ' + err);
                 }
 
+                console.log(chalk.red("You did not select a specific song. Displaying the spotify default song."));
+                console.log(dashes);
                 console.log(chalk.bold("Name of Track: ") + data.tracks.items[0].name); 
                 console.log(chalk.bold("Artist(s): ") + data.tracks.items[0].artists[0].name);
                 console.log(chalk.bold("Song Album: ") + data.tracks.items[0].album.name);
                 console.log(chalk.bold("Preview link: ") + data.tracks.items[0].external_urls.spotify);
+
+                setTimeout(function() {
+                    console.log(dashes);
+                    console.log(chalk.bgRed("Spotify data retrieval has been completed."));
+                    console.log(dashes);
+                }, 1000);
             }
         );
     }
@@ -137,7 +156,14 @@ function spotifyCall() {
                     console.log(chalk.bold("Song Album: ") + data.tracks.items[i].album.name);
                     console.log(chalk.bold("Preview link: ") + data.tracks.items[i].external_urls.spotify);
                     console.log(dashes);
+                    count++;
                 }
+
+                setTimeout(function() {
+                    console.log(chalk.bgRed("Spotify data retrieval has been completed."));
+                    console.log(chalk.bold(count + " song entries were retrieved."));
+                    console.log(dashes);
+                }, 3000);
             }
         );
     }
@@ -154,6 +180,8 @@ function movieCall() {
                 console.log('error:', error);
             }
 
+            console.log(chalk.red("You did not select a specific movie. Displaying OMDB default movie."));
+            console.log(dashes);
             console.log(chalk.bold("Movie Title: ") + movieInfo.Title);
             console.log(chalk.bold("Released Year: ") + movieInfo.Released);
             console.log(chalk.bold("IMDB Rating: ") + movieInfo.imdbRating);
@@ -168,6 +196,11 @@ function movieCall() {
             console.log(chalk.bold("Movie Language: ") + movieInfo.Language);
             console.log(chalk.bold("Movie Plot: ") + movieInfo.Plot);
             console.log(dashes);
+
+            setTimeout(function() {
+                console.log(chalk.bgRed("OMDB data retrieval has been completed."));
+                console.log(dashes);
+            }, 1000);
         });
     }
     else {
@@ -194,6 +227,11 @@ function movieCall() {
             console.log(chalk.bold("Movie Language: ") + movieInfo.Language);
             console.log(chalk.bold("Movie Plot: ") + movieInfo.Plot);
             console.log(dashes);
+
+            setTimeout(function() {
+                console.log(chalk.bgRed("OMDB data retrieval has been completed."));
+                console.log(dashes);
+            }, 1000);
         });
     }
 }
