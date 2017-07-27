@@ -147,6 +147,7 @@ function movieCall() {
             console.log(chalk.bold("Country Produced: ") + movieInfo.Country);
             console.log(chalk.bold("Movie Language: ") + movieInfo.Language);
             console.log(chalk.bold("Movie Plot: ") + movieInfo.Plot);
+            console.log(dashes);
         });
     }
     else {
@@ -159,7 +160,6 @@ function movieCall() {
                 console.log('error:', error);
             }
 
-            console.log(movieInput);
             console.log(chalk.bold("Movie Title: ") + movieInfo.Title);
             console.log(chalk.bold("Released Year: ") + movieInfo.Released);
             console.log(chalk.bold("IMDB Rating: ") + movieInfo.imdbRating);
@@ -173,6 +173,7 @@ function movieCall() {
             console.log(chalk.bold("Country Produced: ") + movieInfo.Country);
             console.log(chalk.bold("Movie Language: ") + movieInfo.Language);
             console.log(chalk.bold("Movie Plot: ") + movieInfo.Plot);
+            console.log(dashes);
         });
     }
 }
