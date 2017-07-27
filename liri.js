@@ -4,12 +4,15 @@ var spotifyKeys = require("./keys.js").spotifyKeys;
 
 var nodeArgs = process.argv;
 var command = process.argv[2];
+var songQuery = nodeArgs[3];
+var movieQuery = nodeArgs[3];
 
 var Twitter = require('twitter');
 var Spotify = require('node-spotify-api');
 const chalk = require('chalk');
 var moment = require('moment');
 var request = require('request');
+var fs = require('fs');
 
 var twitterClient = new Twitter(twitterKeys);
 var spotifyClient = new Spotify(spotifyKeys);
@@ -25,6 +28,19 @@ var commands = ['my-tweets', 'spotify-this-song', 'movie-this', 'do-what-it-says
 // Constants
 const dashes = '-----------------------------------------------------';
 const spaces = "    ";
+
+// Variables
+var inputs = "";
+
+// Compiles a string for all inputs after node commands
+for (var i = 3; i < nodeArgs.length; i++) {
+    if (i > 3) {
+        inputs += " " + nodeArgs[i];
+    }
+    else {
+        inputs = nodeArgs[i];
+    }
+}
 
 // Displays instructions
 function instructions() {
@@ -50,6 +66,10 @@ if (command == commands[1]) {
 
 if (command == commands[2]) {
     movieCall();
+}
+
+if (command == commands[3]) {
+    doWhatItSays();
 }
 
 // Function that displays the latest tweet information for dskayy7
@@ -83,7 +103,7 @@ function myTweets() {
 
 // Shows information for spotify
 function spotifyCall() {
-    if (nodeArgs.length < 4) {
+    if (inputs == "" && nodeArgs[2] == commands[1]) {
         spotifyClient.search({
             type: 'track',
             query: 'The Sign Ace of Base',
@@ -104,7 +124,7 @@ function spotifyCall() {
     else {
         spotifyClient.search({
             type: 'track',
-            query: nodeArgs[3],
+            query: songQuery,
             },
             function(err, data) {
                 if (err) {
@@ -125,7 +145,7 @@ function spotifyCall() {
 
 // Shows information for movies
 function movieCall() {
-    if (nodeArgs.length < 4) {
+    if (inputs == "" && nodeArgs[2] == commands[2]) {
         request('http://www.omdbapi.com/?t=Mr.+Nobody&y=&plot=short&apikey=40e9cece', function (error, response, body) {
             const movieInfo = JSON.parse(body);
             var rottenTomatoesRating = 'Not Rated';
@@ -151,7 +171,7 @@ function movieCall() {
         });
     }
     else {
-        var movieInput = nodeArgs[3].replace(/ /g, '+');
+        var movieInput = movieQuery.replace(/ /g, '+');
         request('http://www.omdbapi.com/?t=' + movieInput + '&y=&plot=short&apikey=40e9cece', function (error, response, body) {
             const movieInfo = JSON.parse(body);
             var rottenTomatoesRating = 'Not Rated';
@@ -176,4 +196,31 @@ function movieCall() {
             console.log(dashes);
         });
     }
+}
+
+// Function for doing what it says
+function doWhatItSays() {
+    fs.readFile("random.txt", 'utf-8', function(error, data) {
+        if (error) {
+            return console.log(error);
+        }
+
+        var textInput = data.split(',');
+        var commandInput = textInput[0];
+        var queryInput = textInput[1];
+
+        if (commandInput == commands[0]) {
+            myTweets();
+        }
+
+        if (commandInput == commands[1]) {
+            songQuery = queryInput;
+            spotifyCall();
+        }
+
+        if (commandInput == commands[2]) {
+            movieQuery = queryInput;
+            movieCall();
+        }
+    })
 }
