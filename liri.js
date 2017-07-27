@@ -9,6 +9,7 @@ var Twitter = require('twitter');
 var Spotify = require('node-spotify-api');
 const chalk = require('chalk');
 var moment = require('moment');
+var request = require('request');
 
 var twitterClient = new Twitter(twitterKeys);
 var spotifyClient = new Spotify(spotifyKeys);
@@ -45,6 +46,10 @@ if (command == commands[0]) {
 
 if (command == commands[1]) {
     spotifyCall();
+}
+
+if (command == commands[2]) {
+    movieCall();
 }
 
 // Function that displays the latest tweet information for dskayy7
@@ -117,3 +122,57 @@ function spotifyCall() {
         );
     }
 };
+
+// Shows information for movies
+function movieCall() {
+    if (nodeArgs.length < 4) {
+        request('http://www.omdbapi.com/?t=Mr.+Nobody&y=&plot=short&apikey=40e9cece', function (error, response, body) {
+            const movieInfo = JSON.parse(body);
+            var rottenTomatoesRating = 'Not Rated';
+
+            if (error) {
+                console.log('error:', error);
+            }
+
+            console.log(chalk.bold("Movie Title: ") + movieInfo.Title);
+            console.log(chalk.bold("Released Year: ") + movieInfo.Released);
+            console.log(chalk.bold("IMDB Rating: ") + movieInfo.imdbRating);
+            for (var i = 0; i < movieInfo.Ratings.length; i++) {
+                if (movieInfo.Ratings[i].Source == 'Rotten Tomatoes') {
+                    rottenTomatoesRating = movieInfo.Ratings[i].Value;
+                }
+            }
+            console.log(chalk.bold("Rotten Tomatoes Rating: ") + rottenTomatoesRating);
+            console.log(chalk.bold("Starring Actors: ") + movieInfo.Actors);
+            console.log(chalk.bold("Country Produced: ") + movieInfo.Country);
+            console.log(chalk.bold("Movie Language: ") + movieInfo.Language);
+            console.log(chalk.bold("Movie Plot: ") + movieInfo.Plot);
+        });
+    }
+    else {
+        var movieInput = nodeArgs[3].replace(/ /g, '+');
+        request('http://www.omdbapi.com/?t=' + movieInput + '&y=&plot=short&apikey=40e9cece', function (error, response, body) {
+            const movieInfo = JSON.parse(body);
+            var rottenTomatoesRating = 'Not Rated';
+
+            if (error) {
+                console.log('error:', error);
+            }
+
+            console.log(movieInput);
+            console.log(chalk.bold("Movie Title: ") + movieInfo.Title);
+            console.log(chalk.bold("Released Year: ") + movieInfo.Released);
+            console.log(chalk.bold("IMDB Rating: ") + movieInfo.imdbRating);
+            for (var i = 0; i < movieInfo.Ratings.length; i++) {
+                if (movieInfo.Ratings[i].Source == 'Rotten Tomatoes') {
+                    rottenTomatoesRating = movieInfo.Ratings[i].Value;
+                }
+            }
+            console.log(chalk.bold("Rotten Tomatoes Rating: ") + rottenTomatoesRating);
+            console.log(chalk.bold("Starring Actors: ") + movieInfo.Actors);
+            console.log(chalk.bold("Country Produced: ") + movieInfo.Country);
+            console.log(chalk.bold("Movie Language: ") + movieInfo.Language);
+            console.log(chalk.bold("Movie Plot: ") + movieInfo.Plot);
+        });
+    }
+}
