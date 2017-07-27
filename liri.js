@@ -43,6 +43,11 @@ if (command == commands[0]) {
     myTweets();
 }
 
+if (command == commands[1]) {
+    spotifyCall();
+}
+
+// Function that displays the latest tweet information for dskayy7
 function myTweets() {
     twitterClient.get('statuses/user_timeline', params, function(error, tweets, response) {
         if (!error) {
@@ -67,6 +72,48 @@ function myTweets() {
                 console.log(chalk.bgRed("Tweets data retrieval has been completed."));
                 console.log(chalk.bold(count + " tweets were retrieved."));
             }, 3000);
-        }
+        };
     });
-}
+};
+
+// Shows information for spotify
+function spotifyCall() {
+    if (nodeArgs.length < 4) {
+        spotifyClient.search({
+            type: 'track',
+            query: 'The Sign Ace of Base',
+            limit: 1 
+            },
+            function(err, data) {
+                if (err) {
+                    return console.log('Error occurred: ' + err);
+                }
+
+                console.log(chalk.bold("Name of Track: ") + data.tracks.items[0].name); 
+                console.log(chalk.bold("Artist(s): ") + data.tracks.items[0].artists[0].name);
+                console.log(chalk.bold("Song Album: ") + data.tracks.items[0].album.name);
+                console.log(chalk.bold("Preview link: ") + data.tracks.items[0].external_urls.spotify);
+            }
+        );
+    }
+    else {
+        spotifyClient.search({
+            type: 'track',
+            query: nodeArgs[3],
+            },
+            function(err, data) {
+                if (err) {
+                    return console.log('Error occurred: ' + err);
+                }
+
+                for (var i = 0; i < (data.tracks.items).length; i++) {
+                    console.log(chalk.bold("Name of Track: ") + data.tracks.items[i].name); 
+                    console.log(chalk.bold("Artist(s): ") + data.tracks.items[i].artists[0].name);
+                    console.log(chalk.bold("Song Album: ") + data.tracks.items[i].album.name);
+                    console.log(chalk.bold("Preview link: ") + data.tracks.items[i].external_urls.spotify);
+                    console.log(dashes);
+                }
+            }
+        );
+    }
+};
